@@ -1,8 +1,12 @@
 'use client';
 
 import { useState } from 'react';
+import { useRouter } from 'next/navigation';
+
+const API_BASE_URL = 'http://127.0.0.1:8000';
 
 export default function RegisterPage() {
+  const router = useRouter();
   const [fullName, setFullName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -17,12 +21,32 @@ export default function RegisterPage() {
     password?: string;
     confirmPassword?: string;
     terms?: string;
+    server?: string;
   }>({});
   const [showSuccess, setShowSuccess] = useState(false);
 
   const validateEmail = (email: string): boolean => {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     return emailRegex.test(email);
+  };
+
+  const validatePassword = (password: string): { valid: boolean; error?: string } => {
+    if (password.length < 8) {
+      return { valid: false, error: 'Пароль должен содержать минимум 8 символов' };
+    }
+    if (!/[A-Z]/.test(password)) {
+      return { valid: false, error: '1 заглавная буква обязательна' };
+    }
+    if (!/[a-z]/.test(password)) {
+      return { valid: false, error: '1 строчная буква обязательна' };
+    }
+    if (!/\d/.test(password)) {
+      return { valid: false, error: '1 цифра обязательна' };
+    }
+    if (!/[<,./';\-=!@#$%^&*()/*+|]/.test(password)) {
+      return { valid: false, error: '1 спецсимвол обязателен' };
+    }
+    return { valid: true };
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -33,6 +57,7 @@ export default function RegisterPage() {
       password?: string;
       confirmPassword?: string;
       terms?: string;
+      server?: string;
     } = {};
 
     if (!fullName.trim()) {
@@ -45,8 +70,11 @@ export default function RegisterPage() {
 
     if (!password) {
       newErrors.password = 'Пароль не может быть пустым';
-    } else if (password.length < 8) {
-      newErrors.password = 'Пароль должен содержать минимум 8 символов';
+    } else {
+      const passwordValidation = validatePassword(password);
+      if (!passwordValidation.valid) {
+        newErrors.password = passwordValidation.error;
+      }
     }
 
     if (!confirmPassword) {
@@ -63,10 +91,44 @@ export default function RegisterPage() {
 
     if (Object.keys(newErrors).length === 0) {
       setIsLoading(true);
-      await new Promise(resolve => setTimeout(resolve, 1500));
-      setIsLoading(false);
-      setShowSuccess(true);
-      setTimeout(() => setShowSuccess(false), 3000);
+      try {
+        const response = await fetch(`${API_BASE_URL}/account/register`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            username: fullName,
+            email: email,
+            password: password,
+          }),
+        });
+
+        if (response.ok) {
+          const data = await response.json();
+          localStorage.setItem('access_token', data.access_token);
+          setShowSuccess(true);
+          setTimeout(() => {
+            setShowSuccess(false);
+            router.push('/profile');
+          }, 1500);
+        } else {
+          const errorData = await response.json().catch(() => ({}));
+          if (response.status === 400) {
+            newErrors.server = errorData.detail || 'Пользователь с таким email уже существует';
+          } else if (response.status === 422) {
+            newErrors.server = 'Ошибка валидации данных';
+          } else {
+            newErrors.server = 'Произошла ошибка при регистрации';
+          }
+          setErrors(newErrors);
+        }
+      } catch (error) {
+        newErrors.server = 'Не удалось подключиться к серверу';
+        setErrors(newErrors);
+      } finally {
+        setIsLoading(false);
+      }
     }
   };
 
@@ -75,7 +137,7 @@ export default function RegisterPage() {
   };
 
   const handleLogin = () => {
-    window.location.href = '/';
+    router.push('/');
   };
 
   return (
@@ -275,6 +337,15 @@ export default function RegisterPage() {
               )}
             </div>
 
+            {/* Server Error */}
+            {errors.server && (
+              <div className="bg-red-500/10 border border-red-500 rounded-lg p-3">
+                <p className="text-sm text-red-400" role="alert">
+                  {errors.server}
+                </p>
+              </div>
+            )}
+
             {/* Create Account Button */}
             <button
               type="submit"
@@ -345,7 +416,7 @@ export default function RegisterPage() {
         {/* Success Notification */}
         {showSuccess && (
           <div className="fixed top-4 right-4 bg-[#45A29E] text-[#0B0C10] px-6 py-3 rounded-lg shadow-lg animate-pulse">
-            Demo registration successful
+            Registration successful! Redirecting...
           </div>
         )}
       </div>

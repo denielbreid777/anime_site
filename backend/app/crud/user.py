@@ -1,7 +1,7 @@
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy import select
-from schemas.user import UserRegistr, UserLogin
-from models.user import User
+from app.schemas.user import UserRegistr, UserLogin
+from app.models.user import User
 from app.core.security import get_password_hash, create_token, verify_password
 
 
@@ -34,8 +34,8 @@ async def login(user: UserLogin, db: AsyncSession):
     if not existing_user:
         return None
 
-    if verify_password(user.password, existing_user.password):
-        token = create_token(existing_user.id)   
+    if verify_password(user.password, existing_user.hashed_password):
+        token = create_token(existing_user.id)
         return token
 
     return None

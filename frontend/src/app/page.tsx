@@ -1,14 +1,18 @@
 'use client';
 
 import { useState } from 'react';
+import { useRouter } from 'next/navigation';
+
+const API_BASE_URL = 'http://127.0.0.1:8000';
 
 export default function LoginPage() {
+  const router = useRouter();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const [rememberMe, setRememberMe] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
-  const [errors, setErrors] = useState<{ email?: string; password?: string }>({});
+  const [errors, setErrors] = useState<{ email?: string; password?: string; server?: string }>({});
   const [showSuccess, setShowSuccess] = useState(false);
 
   const validateEmail = (email: string): boolean => {
@@ -18,7 +22,7 @@ export default function LoginPage() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    const newErrors: { email?: string; password?: string } = {};
+    const newErrors: { email?: string; password?: string; server?: string } = {};
 
     if (!email || !validateEmail(email)) {
       newErrors.email = 'Введите корректный email-адрес, например name@domain.com';
@@ -32,10 +36,42 @@ export default function LoginPage() {
 
     if (Object.keys(newErrors).length === 0) {
       setIsLoading(true);
-      await new Promise(resolve => setTimeout(resolve, 1500));
-      setIsLoading(false);
-      setShowSuccess(true);
-      setTimeout(() => setShowSuccess(false), 3000);
+      try {
+        const formData = new URLSearchParams();
+        formData.append('username', email);
+        formData.append('password', password);
+
+        const response = await fetch(`${API_BASE_URL}/account/login`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/x-www-form-urlencoded',
+          },
+          body: formData.toString(),
+        });
+
+        if (response.ok) {
+          const data = await response.json();
+          localStorage.setItem('access_token', data.access_token);
+          setShowSuccess(true);
+          setTimeout(() => {
+            setShowSuccess(false);
+            router.push('/profile');
+          }, 1500);
+        } else {
+          const errorData = await response.json().catch(() => ({}));
+          if (response.status === 400) {
+            newErrors.server = errorData.detail || 'Неверный логин или пароль';
+          } else {
+            newErrors.server = 'Произошла ошибка при входе';
+          }
+          setErrors(newErrors);
+        }
+      } catch (error) {
+        newErrors.server = 'Не удалось подключиться к серверу';
+        setErrors(newErrors);
+      } finally {
+        setIsLoading(false);
+      }
     }
   };
 
@@ -48,7 +84,7 @@ export default function LoginPage() {
   };
 
   const handleSignUp = () => {
-    alert('Demo: Sign up is not implemented in this demo');
+    router.push('/register');
   };
 
   return (
@@ -165,6 +201,15 @@ export default function LoginPage() {
               </button>
             </div>
 
+            {/* Server Error */}
+            {errors.server && (
+              <div className="bg-red-500/10 border border-red-500 rounded-lg p-3">
+                <p className="text-sm text-red-400" role="alert">
+                  {errors.server}
+                </p>
+              </div>
+            )}
+
             {/* Sign In Button */}
             <button
               type="submit"
@@ -249,7 +294,7 @@ export default function LoginPage() {
         {/* Success Notification */}
         {showSuccess && (
           <div className="fixed top-4 right-4 bg-[#45A29E] text-[#0B0C10] px-6 py-3 rounded-lg shadow-lg animate-pulse">
-            Demo login successful
+            Login successful! Redirecting...
           </div>
         )}
       </div>

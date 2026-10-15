@@ -6,8 +6,8 @@ from fastapi import Depends, HTTPException, status
 
 
 from database import get_db
-from lesson_23.app.core.security import decode_token
-from models.user import User
+from app.core.security import decode_token
+from app.models.user import User
 
 
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/account/login")
@@ -24,5 +24,13 @@ async def get_admin_user(user: User = Depends(get_user)):
         raise HTTPException(
             status_code=status.HTTP_403_FORBIDDEN,
             detail="Only amin can do thHis"
+        )
+    return user
+
+async def get_current_user(user: User = Depends(get_user)):
+    if not user:
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Could not validate credentials"
         )
     return user

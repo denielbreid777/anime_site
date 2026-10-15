@@ -1,10 +1,10 @@
-from sqlachemy import MetaData
-from sqlachemy.orm import DeclarativeBase
-from sqlachemy.ext.asyncio import async_sessionmaker, create_async_engine, AsyncSession
+from sqlalchemy import MetaData
+from sqlalchemy.orm import DeclarativeBase
+from sqlalchemy.ext.asyncio import async_sessionmaker, create_async_engine, AsyncSession
 from typing import AsyncGenerator
 
 
-DATABASE_URL = ""
+DATABASE_URL = "mysql+aiomysql://root:@localhost:3306/anime_db"
 
 convention = {
     "ix": "ix_%(column_0_label)s",
@@ -37,6 +37,6 @@ Async_Session_Local = async_sessionmaker(
 )
 
 
-async def get_bd()->AsyncGenerator[AsyncSession, None]:
+async def get_db()->AsyncGenerator[AsyncSession, None]:
     async with Async_Session_Local() as session:
         yield session
