@@ -2,7 +2,7 @@
 
 mysql+aiomysql://login:password@localhost:3306/learn?charset=utf8mb4
 
-
+$env:PYTHONPATH="$PWD"
 alembic init -t async migrations
 alembic revision --autogenerate -m "init table user"
 

@@ -10,7 +10,7 @@ from alembic import context
 from dotenv import load_dotenv
 
 from backend.database import Base
-
+from backend.app.models.user import User
 
 
 
