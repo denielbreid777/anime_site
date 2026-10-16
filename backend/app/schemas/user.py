@@ -5,7 +5,7 @@ import re
 
 class UserBase(BaseModel):
     username: str = Field(description="User name", examples=["Artur"])
-    email: str = Field(description="User email", examples=["artur@gmail.com"])
+    email: str | None = Field(description="User email", examples=["artur@gmail.com"])
     model_config = ConfigDict(from_attributes=True)
 
 
