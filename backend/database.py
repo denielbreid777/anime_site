@@ -4,7 +4,7 @@ from sqlalchemy.ext.asyncio import async_sessionmaker, create_async_engine, Asyn
 from typing import AsyncGenerator
 
 
-DATABASE_URL = "mysql+aiomysql://root:@localhost:3306/anime_db"
+DATABASE_URL = "mysql+aiomysql://root@localhost:3306/anime_db"
 
 convention = {
     "ix": "ix_%(column_0_label)s",

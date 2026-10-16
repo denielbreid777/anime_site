@@ -2,14 +2,15 @@ from fastapi import FastAPI
 from contextlib import asynccontextmanager
 from app.api.user import router
 
+from fastapi.middleware.cors import CORSMiddleware
+
+
+
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     print("Starting application...")
     yield
     print("Stopping application...")
-
-
-
 
 app = FastAPI(
     title="Anime Wem Site With Messanger in it",
@@ -23,6 +24,15 @@ app = FastAPI(
         "name": "Daniel Breid",
         "email": "danielshkyndia@gmail.com",
     })
+
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 
 app.include_router(router)
