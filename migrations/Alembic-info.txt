@@ -1,0 +1,26 @@
+
+
+mysql+aiomysql://login:password@localhost:3306/learn?charset=utf8mb4
+
+
+alembic init -t async migrations
+alembic revision --autogenerate -m "init table user"
+
+upgrade - идет на повышение
+alembic upgrade head - Перекидывает на последнюю миграцию
+alembic upgrade 989bab0857fe - Перекидывает на конкретную миграцию
+alembic upgrade +1 - Перекидывает на следующую миграцию
+
+downgrade - идет на понижение
+alembic downgrade base - снести все
+alembic downgrade 989bab0857fe - Перекидывает на конкретную миграцию
+alembic downgrade -1 - Перекидывает на предыдущую миграцию
+
+информационное:
+alembic current
+alembic current -v
+alembic history --verbose
+alembic show 989bab0857fe
+
+1 - переименнование таблицы или колонки 
+2 - Не создает CHECK
