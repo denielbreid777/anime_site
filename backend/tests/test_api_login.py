@@ -18,7 +18,6 @@ async def test_login_with_username(client: AsyncClient):
 
 
 @pytest.mark.asyncio
-@pytest.mark.xfail(strict=True, reason="BUG-B3: login only works with username, not email")
 async def test_login_with_email(client: AsyncClient):
     await client.post(
         "/account/register",

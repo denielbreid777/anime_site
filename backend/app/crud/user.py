@@ -7,7 +7,9 @@ from backend.app.core.security import get_password_hash, create_token, verify_pa
 
 
 async def registration(user: UserRegistr, db: AsyncSession):
-    existing_user = (await db.execute(select(User).where(User.username == user.username))).scalar_one_or_none()
+    existing_user = (await db.execute(
+        select(User).where((User.username == user.username) | (User.email == user.email))
+    )).scalar_one_or_none()
 
     if existing_user:
         return None
@@ -20,18 +22,20 @@ async def registration(user: UserRegistr, db: AsyncSession):
         email=user.email,
         hashed_password=hashed_password
     )
-    
+
     db.add(new_user)
     await db.commit()
     await db.refresh(new_user)
-    
+
     token = create_token(new_user.id)
 
     return token
 
 
 async def login(user: UserLogin, db: AsyncSession):
-    existing_user = (await db.execute(select(User).where(User.username == user.username))).scalar_one_or_none()
+    existing_user = (await db.execute(
+        select(User).where((User.username == user.username) | (User.email == user.username))
+    )).scalar_one_or_none()
     if not existing_user:
         return None
 

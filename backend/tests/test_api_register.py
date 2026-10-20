@@ -47,7 +47,6 @@ async def test_register_duplicate_username_has_detail(client: AsyncClient):
 
 
 @pytest.mark.asyncio
-@pytest.mark.xfail(strict=True, reason="BUG-B2: duplicate email returns 500 instead of 400")
 async def test_register_duplicate_email(client: AsyncClient):
     await client.post(
         "/account/register",

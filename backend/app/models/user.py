@@ -1,9 +1,8 @@
 from sqlalchemy.sql import true
 from backend.database import Base
 from sqlalchemy.orm import Mapped, mapped_column
-from sqlalchemy import String, DateTime
+from sqlalchemy import String, DateTime, func
 from datetime import datetime
-import datetime
 
 class User(Base):
     __tablename__ = "users"
@@ -15,5 +14,5 @@ class User(Base):
     is_admin: Mapped[bool] = mapped_column(default=False)
 
 
-    created_at: Mapped[datetime] = mapped_column(DateTime, default=datetime.datetime.now(datetime.timezone.utc))
-    updated_at: Mapped[datetime] = mapped_column(DateTime, default=datetime.datetime.now(datetime.timezone.utc), onupdate=datetime.datetime.now(datetime.timezone.utc))
+    created_at: Mapped[datetime] = mapped_column(DateTime, server_default=func.now())
+    updated_at: Mapped[datetime] = mapped_column(DateTime, server_default=func.now(), onupdate=func.now())

@@ -67,7 +67,6 @@ async def test_password_too_long():
 
 
 @pytest.mark.asyncio
-@pytest.mark.xfail(strict=True, reason="BUG-B7: regex doesn't properly handle hyphen in special characters")
 async def test_password_with_hyphen():
     user = UserRegistr(username="testuser", email="test@example.com", password="Abcdefg1-")
     assert user.password.get_secret_value() == "Abcdefg1-"
