@@ -39,7 +39,8 @@ async def login(user: UserLogin, db: AsyncSession):
     if not existing_user:
         return None
 
-    if verify_password(user.password, existing_user.hashed_password):
+    password = user.password.get_secret_value() if hasattr(user.password, 'get_secret_value') else user.password
+    if verify_password(password, existing_user.hashed_password):
         token = create_token(existing_user.id)
         return token
 
