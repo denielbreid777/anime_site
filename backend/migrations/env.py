@@ -9,12 +9,16 @@ from sqlalchemy.ext.asyncio import async_engine_from_config
 from alembic import context
 from dotenv import load_dotenv
 
-from backend.database import Base
-from backend.app.models.user import User
+import sys
+import os
+sys.path.append(os.path.dirname(os.path.dirname(__file__)))
+
+from database import Base
+from app.models.user import User
 
 
 
-load_dotenv()
+load_dotenv(os.path.join(os.path.dirname(__file__), '..', '.env'))
 
 config = context.config
 
