@@ -15,6 +15,8 @@ oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/account/login")
 
 async def get_user(db: AsyncSession = Depends(get_db), token = Depends(oauth2_scheme)):
     user_id = decode_token(token)
+    if user_id is None:
+        return None
     user = (await db.execute(select(User).where(User.id == user_id))).scalar_one_or_none()
     return user
 
