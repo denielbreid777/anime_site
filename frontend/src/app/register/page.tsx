@@ -123,7 +123,7 @@ export default function RegisterPage() {
           }
           setErrors(newErrors);
         }
-      } catch (error) {
+      } catch {
         newErrors.server = 'Не удалось подключиться к серверу';
         setErrors(newErrors);
       } finally {

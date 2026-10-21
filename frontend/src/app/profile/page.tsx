@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { useRouter } from 'next/navigation';
 
 const API_BASE_URL = 'http://127.0.0.1:8000';
@@ -33,11 +33,7 @@ export default function ProfilePage() {
     server?: string;
   }>({});
 
-  useEffect(() => {
-    loadUserProfile();
-  }, []);
-
-  const loadUserProfile = async () => {
+  const loadUserProfile = useCallback(async () => {
     const token = localStorage.getItem('access_token');
     if (!token) {
       router.push('/');
@@ -62,12 +58,17 @@ export default function ProfilePage() {
       } else {
         setErrors({ server: 'Не удалось загрузить данные профиля' });
       }
-    } catch (error) {
+    } catch {
       setErrors({ server: 'Не удалось подключиться к серверу' });
     } finally {
       setIsLoadingProfile(false);
     }
-  };
+  }, [router]);
+
+  useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    loadUserProfile();
+  }, [loadUserProfile]);
 
   const validateEmail = (email: string): boolean => {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;

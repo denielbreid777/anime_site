@@ -66,7 +66,7 @@ export default function LoginPage() {
           }
           setErrors(newErrors);
         }
-      } catch (error) {
+      } catch {
         newErrors.server = 'Не удалось подключиться к серверу';
         setErrors(newErrors);
       } finally {
@@ -266,7 +266,7 @@ export default function LoginPage() {
 
           {/* Sign Up Link */}
           <p className="text-center mt-6 text-[#C5C6C7]">
-            Don't have an account?{' '}
+            Don&apos;t have an account?{' '}
             <button
               type="button"
               onClick={handleSignUp}
