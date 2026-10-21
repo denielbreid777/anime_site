@@ -2,8 +2,8 @@
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
-
-const API_BASE_URL = 'http://127.0.0.1:8000';
+import { loginUser } from '@/lib/api';
+import { setToken } from '@/lib/auth';
 
 export default function LoginPage() {
   const router = useRouter();
@@ -37,21 +37,11 @@ export default function LoginPage() {
     if (Object.keys(newErrors).length === 0) {
       setIsLoading(true);
       try {
-        const formData = new URLSearchParams();
-        formData.append('username', email);
-        formData.append('password', password);
-
-        const response = await fetch(`${API_BASE_URL}/account/login`, {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/x-www-form-urlencoded',
-          },
-          body: formData.toString(),
-        });
+        const response = await loginUser(email, password);
 
         if (response.ok) {
           const data = await response.json();
-          localStorage.setItem('access_token', data.access_token);
+          setToken(data.access_token);
           setShowSuccess(true);
           setTimeout(() => {
             setShowSuccess(false);

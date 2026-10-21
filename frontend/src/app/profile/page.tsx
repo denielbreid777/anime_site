@@ -2,8 +2,8 @@
 
 import { useState, useEffect, useCallback } from 'react';
 import { useRouter } from 'next/navigation';
-
-const API_BASE_URL = 'http://127.0.0.1:8000';
+import { getMe } from '@/lib/api';
+import { getToken, clearToken } from '@/lib/auth';
 
 interface UserProfile {
   username: string;
@@ -34,26 +34,21 @@ export default function ProfilePage() {
   }>({});
 
   const loadUserProfile = useCallback(async () => {
-    const token = localStorage.getItem('access_token');
+    const token = getToken();
     if (!token) {
       router.push('/');
       return;
     }
 
     try {
-      const response = await fetch(`${API_BASE_URL}/account/me`, {
-        method: 'GET',
-        headers: {
-          'Authorization': `Bearer ${token}`,
-        },
-      });
+      const response = await getMe(token);
 
       if (response.ok) {
         const data: UserProfile = await response.json();
         setFullName(data.username);
         setEmail(data.email);
       } else if (response.status === 401 || response.status === 400) {
-        localStorage.removeItem('access_token');
+        clearToken();
         router.push('/');
       } else {
         setErrors({ server: 'Не удалось загрузить данные профиля' });
@@ -125,7 +120,7 @@ export default function ProfilePage() {
   };
 
   const handleLogout = () => {
-    localStorage.removeItem('access_token');
+    clearToken();
     router.push('/');
   };
 
