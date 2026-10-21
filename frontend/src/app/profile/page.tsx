@@ -4,6 +4,7 @@ import { useState, useEffect, useCallback } from 'react';
 import { useRouter } from 'next/navigation';
 import { getMe } from '@/lib/api';
 import { getToken, clearToken } from '@/lib/auth';
+import { validateEmail } from '@/lib/validation';
 
 interface UserProfile {
   username: string;
@@ -64,11 +65,6 @@ export default function ProfilePage() {
     // eslint-disable-next-line react-hooks/set-state-in-effect
     loadUserProfile();
   }, [loadUserProfile]);
-
-  const validateEmail = (email: string): boolean => {
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    return emailRegex.test(email);
-  };
 
   const handleSaveChanges = async () => {
     const newErrors: { fullName?: string; email?: string; password?: string } = {};

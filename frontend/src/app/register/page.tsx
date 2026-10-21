@@ -4,6 +4,7 @@ import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { registerUser } from '@/lib/api';
 import { setToken } from '@/lib/auth';
+import { validateEmail, validatePassword } from '@/lib/validation';
 
 export default function RegisterPage() {
   const router = useRouter();
@@ -24,30 +25,6 @@ export default function RegisterPage() {
     server?: string;
   }>({});
   const [showSuccess, setShowSuccess] = useState(false);
-
-  const validateEmail = (email: string): boolean => {
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    return emailRegex.test(email);
-  };
-
-  const validatePassword = (password: string): { valid: boolean; error?: string } => {
-    if (password.length < 8) {
-      return { valid: false, error: 'Пароль должен содержать минимум 8 символов' };
-    }
-    if (!/[A-Z]/.test(password)) {
-      return { valid: false, error: '1 заглавная буква обязательна' };
-    }
-    if (!/[a-z]/.test(password)) {
-      return { valid: false, error: '1 строчная буква обязательна' };
-    }
-    if (!/\d/.test(password)) {
-      return { valid: false, error: '1 цифра обязательна' };
-    }
-    if (!/[<,./';\-=!@#$%^&*()/*+|]/.test(password)) {
-      return { valid: false, error: '1 спецсимвол обязателен' };
-    }
-    return { valid: true };
-  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
