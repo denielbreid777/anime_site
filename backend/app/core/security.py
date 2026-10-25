@@ -1,7 +1,7 @@
-
 from passlib.context import CryptContext
 from jose import jwt
 from datetime import datetime, timedelta, timezone
+from backend.app.core.config import settings
 
 
 pass_context = CryptContext(
@@ -19,19 +19,16 @@ def verify_password(password: str, hash_password:str) -> bool:
 
 
 def create_token(id):
-    lifetime = datetime.now(timezone.utc) + timedelta(minutes=30)
+    lifetime = datetime.now(timezone.utc) + timedelta(minutes=settings.ACCESS_TOKEN_EXPIRE_MINUTES)
     payload = {"sub": str(id), "exp": lifetime}
-    secret_key = "nafjksbe23b4jkskdjfbgl2j345blkjsdbfgljkb23ljk4b52lbsdfd"
 
-    token = jwt.encode(payload, secret_key)
+    token = jwt.encode(payload, settings.SECRET_KEY, algorithm=settings.ALGORITHM)
 
     return token
 
 def decode_token(token):
-    secret_key = "nafjksbe23b4jkskdjfbgl2j345blkjsdbfgljkb23ljk4b52lbsdfd"
     try:
-        payload = jwt.decode(token, secret_key)
+        payload = jwt.decode(token, settings.SECRET_KEY, algorithms=[settings.ALGORITHM])
+        return int(payload["sub"])
     except:
         return None
-
-    return int(payload["sub"])

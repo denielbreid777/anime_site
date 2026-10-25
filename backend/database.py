@@ -2,9 +2,10 @@ from sqlalchemy import MetaData
 from sqlalchemy.orm import DeclarativeBase
 from sqlalchemy.ext.asyncio import async_sessionmaker, create_async_engine, AsyncSession
 from typing import AsyncGenerator
+from backend.app.core.config import settings
 
 
-DATABASE_URL = "mysql+aiomysql://root@localhost:3306/anime_db"
+DATABASE_URL = settings.DATABASE_URL
 
 convention = {
     "ix": "ix_%(column_0_label)s",
