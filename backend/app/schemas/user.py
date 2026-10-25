@@ -39,7 +39,7 @@ class UserRegistr(UserBase):
         if not re.search(r"\d", password):
             raise ValueError("1 digit required")
         
-        if not re.search(r"[<,./';-=!@#$%^&*()/*+|]", password):
+        if not re.search(r"[<,./';-=!@#$%^&*()/*+|-]", password):
             raise ValueError("One symbol requires")
 
         
@@ -47,5 +47,6 @@ class UserRegistr(UserBase):
 
 
 class UserLogin(UserBase):
+    username: str
     password: SecretStr = Field(max_length=30)
 
