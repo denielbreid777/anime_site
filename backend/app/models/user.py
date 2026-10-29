@@ -1,8 +1,12 @@
+from typing import TYPE_CHECKING
 from sqlalchemy.sql import true
 from backend.database import Base
-from sqlalchemy.orm import Mapped, mapped_column
+from sqlalchemy.orm import Mapped, mapped_column, relationship
 from sqlalchemy import String, DateTime, func
 from datetime import datetime
+
+if TYPE_CHECKING:
+    from backend.app.models.post import Post
 
 class User(Base):
     __tablename__ = "users"

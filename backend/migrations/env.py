@@ -15,6 +15,8 @@ sys.path.append(os.path.dirname(os.path.dirname(os.path.dirname(__file__))))
 
 from backend.database import Base
 from backend.app.models.user import User
+from backend.app.models.anime import Anime
+from backend.app.models.post import Post
 
 
 

@@ -1,8 +1,13 @@
 import enum
 from datetime import datetime
+from typing import TYPE_CHECKING
 from sqlalchemy import String, Text, DateTime, ForeignKey, Enum, CheckConstraint, func
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 from backend.database import Base
+
+if TYPE_CHECKING:
+    from backend.app.models.user import User
+    from backend.app.models.anime import Anime
 
 #Це так будуться випадаючий список
 class PostType(str, enum.Enum):
@@ -32,3 +37,4 @@ class Post(Base):
     updated_at: Mapped[datetime] = mapped_column(DateTime, server_default=func.now(), onupdate=func.now())
 
     author: Mapped["User"] = relationship(back_populates="posts")
+    anime: Mapped["Anime"] = relationship(back_populates="posts")

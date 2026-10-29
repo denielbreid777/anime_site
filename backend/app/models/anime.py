@@ -1,8 +1,12 @@
+from typing import TYPE_CHECKING
 from backend.database import Base
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 from sqlalchemy import String, DateTime, func, Text , Enum
 from datetime import datetime
 import enum
+
+if TYPE_CHECKING:
+    from backend.app.models.post import Post
 
 
 class AnimeStatus(str, enum.Enum):
