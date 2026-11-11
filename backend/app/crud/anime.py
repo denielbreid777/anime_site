@@ -55,3 +55,8 @@ async def update_anime(anime: Anime, data: AnimeUpdate, db: AsyncSession):
 async def delete_anime(anime: Anime, db: AsyncSession):
     await db.delete(anime)
     await db.commit()
+
+
+
+
+

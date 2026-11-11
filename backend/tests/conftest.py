@@ -64,3 +64,23 @@ async def auth_headers(create_user):
     response = await create_user("testuser", "test@example.com", "12Ukrain34!")
     token = response.json()["access_token"]
     return {"Authorization": f"Bearer {token}"}
+
+
+@pytest.fixture(scope="function")
+async def admin_headers(test_session):
+    from backend.app.models.user import User
+    from backend.app.core.security import get_password_hash
+
+    admin = User(
+        username="admin",
+        email="admin@example.com",
+        hashed_password=get_password_hash("12Ukrain34!"),
+        is_admin=True
+    )
+    test_session.add(admin)
+    await test_session.commit()
+    await test_session.refresh(admin)
+
+    from backend.app.core.security import create_token
+    token = create_token(admin.id)
+    return {"Authorization": f"Bearer {token}"}

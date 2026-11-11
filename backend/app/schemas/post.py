@@ -33,8 +33,8 @@ class PostAuthor(BaseModel):
     model_config = ConfigDict(from_attributes=True)
 
 
-#Fy yjf ну а тут одна схема для всіх трьох видів. 
-# У звичайного поста rating і image_url просто будуть null, 
+#Fy yjf ну а тут одна схема для всіх трьох видів.
+# У звичайного поста rating і image_url просто будуть null,
 # а фронт буде за полем type вирішути, як показувати пост.
 
 class PostResponse(BaseModel):
@@ -45,6 +45,6 @@ class PostResponse(BaseModel):
     anime_id: int | None
     rating: int | None
     image_url: str | None
-    author: PostAuthor
+    author_id: int
     created_at: datetime
     model_config = ConfigDict(from_attributes=True)

@@ -12,6 +12,7 @@ class UserBase(BaseModel):
 
 
 class UserRespons(UserBase):
+    id: int
     is_admin: bool = Field(description="Is user admin", examples=[False])
 
 

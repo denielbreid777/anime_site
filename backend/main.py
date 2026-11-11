@@ -15,10 +15,10 @@ async def lifespan(app: FastAPI):
     print("Stopping application...")
 
 app = FastAPI(
-    title="Anime Wem Site With Messanger in it",
+    title="Anime Social Network",
     lifespan=lifespan,
     version="1.0.0",
-    description="A simple anime watching application with messenger functionality",
+    description="A social network focused on anime content",
     docs_url="/docs",
     redoc_url="/redoc",
     openapi_url="/openapi.json",

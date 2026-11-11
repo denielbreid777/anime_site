@@ -59,7 +59,7 @@ async def create_fanart_route(data: FanartCreate, user: User = Depends(get_curre
 
 
 # Редагування
-@router.put("/posts/{post_id}",
+@router.patch("/posts/{post_id}",
               response_model=PostResponse,
               responses={
                   status.HTTP_401_UNAUTHORIZED: {"description": "Token is required"},
