@@ -1,12 +1,12 @@
 from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from database import get_db
-from app.models.user import User
-from app.core.dependencies import get_current_user
-from app.schemas.comment import CommentCreate, CommentUpdate, CommentResponse
-from app.crud import comment as crud
-from app.crud import post as post_crud
+from backend.database import get_db
+from backend.app.models.user import User
+from backend.app.core.dependencies import get_current_user
+from backend.app.schemas.comment import CommentCreate, CommentUpdate, CommentResponse
+from backend.app.crud import comment as crud
+from backend.app.crud import post as post_crud
 
 
 router = APIRouter(tags=["Comments"])

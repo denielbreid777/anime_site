@@ -1,6 +1,6 @@
 from typing import TYPE_CHECKING
 from sqlalchemy.sql import true
-from database import Base
+from backend.database import Base
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 from sqlalchemy import String, DateTime, func
 from datetime import datetime

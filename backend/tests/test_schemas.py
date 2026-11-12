@@ -1,7 +1,7 @@
 import pytest
 from pydantic import ValidationError
 
-from app.schemas.user import UserRegistr
+from backend.app.schemas.user import UserRegistr
 
 
 @pytest.mark.asyncio

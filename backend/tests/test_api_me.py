@@ -1,7 +1,7 @@
 import pytest
 from httpx import AsyncClient
 
-from app.core.security import create_token
+from backend.app.core.security import create_token
 
 
 @pytest.mark.asyncio
@@ -41,7 +41,7 @@ async def test_me_invalid_token(client: AsyncClient):
 async def test_me_expired_token(client: AsyncClient):
     from datetime import datetime, timedelta, timezone
     from jose import jwt
-    from app.core.config import settings
+    from backend.app.core.config import settings
     payload = {"sub": "999", "exp": datetime.now(timezone.utc) - timedelta(minutes=30)}
     token = jwt.encode(payload, settings.SECRET_KEY, algorithm=settings.ALGORITHM)
     response = await client.get("/account/me", headers={"Authorization": f"Bearer {token}"})
@@ -59,7 +59,7 @@ async def test_me_nonexistent_user_token(client: AsyncClient):
 async def test_me_token_with_non_numeric_sub(client: AsyncClient):
     from datetime import datetime, timedelta, timezone
     from jose import jwt
-    from app.core.config import settings
+    from backend.app.core.config import settings
     payload = {"sub": "abc", "exp": datetime.now(timezone.utc) + timedelta(minutes=30)}
     token = jwt.encode(payload, settings.SECRET_KEY, algorithm=settings.ALGORITHM)
     response = await client.get("/account/me", headers={"Authorization": f"Bearer {token}"})

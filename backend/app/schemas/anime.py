@@ -2,7 +2,7 @@
 from datetime import datetime
 from pydantic import BaseModel, Field, ConfigDict
 
-from app.models.anime import AnimeStatus
+from backend.app.models.anime import AnimeStatus
 
 
 # Рое тоже тільки Адні адмін

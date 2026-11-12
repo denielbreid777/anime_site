@@ -1,8 +1,8 @@
 import pytest
 from httpx import AsyncClient
 from fastapi import HTTPException
-from app.core.dependencies import get_admin_user, get_current_user
-from app.models.user import User
+from backend.app.core.dependencies import get_admin_user, get_current_user
+from backend.app.models.user import User
 from datetime import datetime
 
 

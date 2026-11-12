@@ -1,8 +1,8 @@
 import pytest
 from sqlalchemy.ext.asyncio import AsyncSession
 from pydantic import SecretStr
-from app.crud.user import registration, login
-from app.schemas.user import UserRegistr, UserLogin
+from backend.app.crud.user import registration, login
+from backend.app.schemas.user import UserRegistr, UserLogin
 
 
 @pytest.mark.asyncio

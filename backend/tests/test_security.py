@@ -2,7 +2,7 @@ import pytest
 from datetime import datetime, timedelta, timezone
 from jose import jwt
 
-from app.core.security import get_password_hash, verify_password, create_token, decode_token
+from backend.app.core.security import get_password_hash, verify_password, create_token, decode_token
 
 
 @pytest.mark.asyncio
@@ -42,7 +42,7 @@ async def test_decode_garbage_token():
 
 @pytest.mark.asyncio
 async def test_decode_token_wrong_key():
-    from app.core.config import settings
+    from backend.app.core.config import settings
     payload = {"sub": "42", "exp": datetime.now(timezone.utc) + timedelta(minutes=30)}
     token = jwt.encode(payload, "wrong_secret_key")
     assert decode_token(token) is None
@@ -50,7 +50,7 @@ async def test_decode_token_wrong_key():
 
 @pytest.mark.asyncio
 async def test_decode_expired_token():
-    from app.core.config import settings
+    from backend.app.core.config import settings
     payload = {"sub": "42", "exp": datetime.now(timezone.utc) - timedelta(minutes=30)}
     token = jwt.encode(payload, settings.SECRET_KEY, algorithm=settings.ALGORITHM)
     assert decode_token(token) is None
@@ -58,7 +58,7 @@ async def test_decode_expired_token():
 
 @pytest.mark.asyncio
 async def test_decode_token_without_sub():
-    from app.core.config import settings
+    from backend.app.core.config import settings
     payload = {"exp": datetime.now(timezone.utc) + timedelta(minutes=30)}
     token = jwt.encode(payload, settings.SECRET_KEY, algorithm=settings.ALGORITHM)
     assert decode_token(token) is None
@@ -66,7 +66,7 @@ async def test_decode_token_without_sub():
 
 @pytest.mark.asyncio
 async def test_decode_token_with_non_numeric_sub():
-    from app.core.config import settings
+    from backend.app.core.config import settings
     payload = {"sub": "abc", "exp": datetime.now(timezone.utc) + timedelta(minutes=30)}
     token = jwt.encode(payload, settings.SECRET_KEY, algorithm=settings.ALGORITHM)
     assert decode_token(token) is None

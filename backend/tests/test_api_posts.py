@@ -171,7 +171,7 @@ async def test_update_own_post(client: AsyncClient, auth_headers):
     )
     post_id = create_response.json()["id"]
 
-    response = await client.put(
+    response = await client.patch(
         f"/posts/{post_id}",
         json={"title": "Оновлений заголовок"},
         headers=auth_headers
@@ -197,7 +197,7 @@ async def test_update_other_user_post(client: AsyncClient, auth_headers, create_
     )
     post_id = create_response.json()["id"]
 
-    response = await client.put(
+    response = await client.patch(
         f"/posts/{post_id}",
         json={"title": "Спроба змінити"},
         headers=user2_headers
@@ -207,7 +207,7 @@ async def test_update_other_user_post(client: AsyncClient, auth_headers, create_
 
 @pytest.mark.asyncio
 async def test_update_post_not_found(client: AsyncClient, auth_headers):
-    response = await client.put(
+    response = await client.patch(
         "/posts/99999",
         json={"title": "Оновлений заголовок"},
         headers=auth_headers
