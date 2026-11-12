@@ -2,7 +2,7 @@
 from datetime import datetime
 from pydantic import BaseModel, Field, ConfigDict
 
-from backend.app.models.post import PostType
+from app.models.post import PostType
 
 
 #  Звичайний пост

@@ -3,8 +3,8 @@ from sqlalchemy.ext.asyncio import AsyncSession, create_async_engine, async_sess
 from sqlalchemy.pool import StaticPool
 from httpx import AsyncClient, ASGITransport
 
-from backend.database import Base, get_db
-from backend.main import app
+from database import Base, get_db
+from main import app
 
 
 TEST_DATABASE_URL = "sqlite+aiosqlite:///:memory:"
@@ -68,8 +68,8 @@ async def auth_headers(create_user):
 
 @pytest.fixture(scope="function")
 async def admin_headers(test_session):
-    from backend.app.models.user import User
-    from backend.app.core.security import get_password_hash
+    from app.models.user import User
+    from app.core.security import get_password_hash
 
     admin = User(
         username="admin",
@@ -81,6 +81,6 @@ async def admin_headers(test_session):
     await test_session.commit()
     await test_session.refresh(admin)
 
-    from backend.app.core.security import create_token
+    from app.core.security import create_token
     token = create_token(admin.id)
     return {"Authorization": f"Bearer {token}"}

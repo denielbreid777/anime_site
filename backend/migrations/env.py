@@ -13,11 +13,11 @@ import sys
 import os
 sys.path.append(os.path.dirname(os.path.dirname(os.path.dirname(__file__))))
 
-from backend.database import Base
-from backend.app.models.user import User
-from backend.app.models.anime import Anime
-from backend.app.models.post import Post
-
+from database import Base
+from app.models.user import User
+from app.models.anime import Anime
+from app.models.post import Post
+from app.models.comment import Comment
 
 
 load_dotenv(os.path.join(os.path.dirname(__file__), '..', '..', '.env'))

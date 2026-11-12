@@ -1,12 +1,12 @@
 from typing import TYPE_CHECKING
 from sqlalchemy.sql import true
-from backend.database import Base
+from database import Base
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 from sqlalchemy import String, DateTime, func
 from datetime import datetime
 
 if TYPE_CHECKING:
-    from backend.app.models.post import Post
+    from app.models.post import Post
 
 class User(Base):
     __tablename__ = "users"
@@ -19,3 +19,4 @@ class User(Base):
     posts: Mapped[list["Post"]] = relationship(back_populates="author", cascade="all, delete-orphan")
     created_at: Mapped[datetime] = mapped_column(DateTime, server_default=func.now())
     updated_at: Mapped[datetime] = mapped_column(DateTime, server_default=func.now(), onupdate=func.now())
+    comments: Mapped[list["Comment"]] = relationship(back_populates="author", cascade="all, delete-orphan")

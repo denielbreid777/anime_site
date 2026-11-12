@@ -1,8 +1,8 @@
 from fastapi import FastAPI
 from contextlib import asynccontextmanager
-from backend.app.api.user import router as user_router
-from backend.app.api.anime import router as anime_router
-from backend.app.api.post import router as post_router
+from app.api.user import router as user_router
+from app.api.anime import router as anime_router
+from app.api.post import router as post_router
 
 from fastapi.middleware.cors import CORSMiddleware
 
@@ -40,6 +40,7 @@ app.add_middleware(
 app.include_router(user_router)
 app.include_router(anime_router)
 app.include_router(post_router)
+app.include_router(comment_router)
 
 if __name__ == "__main__":
     import uvicorn

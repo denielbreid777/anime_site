@@ -1,7 +1,7 @@
 import pytest
 from httpx import AsyncClient
 
-from backend.app.core.security import decode_token
+from app.core.security import decode_token
 
 
 @pytest.mark.asyncio
