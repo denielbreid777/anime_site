@@ -1,8 +1,8 @@
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from backend.app.models.comment import Comment
-from backend.app.schemas.comment import CommentCreate, CommentUpdate
+from app.models.comment import Comment
+from app.schemas.comment import CommentCreate, CommentUpdate
 
 
 async def get_comments(post_id: int, db: AsyncSession):

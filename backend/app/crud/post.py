@@ -1,8 +1,8 @@
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from backend.app.models.post import Post, PostType
-from backend.app.schemas.post import PostCreate, ReviewCreate, FanartCreate, PostUpdate
+from app.models.post import Post, PostType
+from app.schemas.post import PostCreate, ReviewCreate, FanartCreate, PostUpdate
 
 
 

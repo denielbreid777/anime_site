@@ -1,9 +1,9 @@
 from fastapi import FastAPI
 from contextlib import asynccontextmanager
-from backend.app.api.user import router as user_router
-from backend.app.api.anime import router as anime_router
-from backend.app.api.post import router as post_router
-from backend.app.api.comments import router as comment_router
+from app.api.user import router as user_router
+from app.api.anime import router as anime_router
+from app.api.post import router as post_router
+from app.api.comments import router as comment_router
 
 
 from fastapi.middleware.cors import CORSMiddleware

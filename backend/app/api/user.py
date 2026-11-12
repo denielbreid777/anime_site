@@ -2,12 +2,12 @@ from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy.ext.asyncio import AsyncSession
 from fastapi.security import OAuth2PasswordRequestForm
 
-from backend.database import get_db
-from backend.app.schemas.token import TokenResponse
-from backend.app.schemas.user import UserRegistr, UserRespons
-from backend.app.crud.user import registration, login
-from backend.app.models.user import User
-from backend.app.core.dependencies import get_current_user, get_user
+from database import get_db
+from app.schemas.token import TokenResponse
+from app.schemas.user import UserRegistr, UserRespons
+from app.crud.user import registration, login
+from app.models.user import User
+from app.core.dependencies import get_current_user, get_user
 
 
 

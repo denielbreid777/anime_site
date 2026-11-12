@@ -2,11 +2,11 @@
 from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from backend.database import get_db
-from backend.app.models.user import User
-from backend.app.core.dependencies import get_current_user
-from backend.app.schemas.anime import AnimeCreate, AnimeUpdate, AnimeResponse
-from backend.app.crud import anime as crud
+from database import get_db
+from app.models.user import User
+from app.core.dependencies import get_current_user
+from app.schemas.anime import AnimeCreate, AnimeUpdate, AnimeResponse
+from app.crud import anime as crud
 
 
 router = APIRouter(prefix="/anime", tags=["Anime"])

@@ -1,8 +1,8 @@
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from backend.app.models.anime import Anime
-from backend.app.schemas.anime import AnimeCreate, AnimeUpdate
+from app.models.anime import Anime
+from app.schemas.anime import AnimeCreate, AnimeUpdate
 
 
 async def get_anime(anime_id: int, db: AsyncSession):
