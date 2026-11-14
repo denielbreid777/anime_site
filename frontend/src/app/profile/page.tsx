@@ -2,8 +2,13 @@
 
 import { useState, useEffect, useCallback } from 'react';
 import { useRouter } from 'next/navigation';
-import { getMe } from '@/lib/api';
+import Link from 'next/link';
+import Header from '@/components/Header';
+import { getMe, logoutUser } from '@/lib/api';
 import { getToken, clearToken } from '@/lib/auth';
+import { useCurrentUser, usePostsList } from '@/lib/hooks';
+import { useQueryClient } from '@tanstack/react-query';
+import PostCard from '@/components/PostCard';
 import { validateEmail } from '@/lib/validation';
 
 interface UserProfile {
@@ -14,6 +19,11 @@ interface UserProfile {
 
 export default function ProfilePage() {
   const router = useRouter();
+  const queryClient = useQueryClient();
+  const { data: user } = useCurrentUser();
+  const { data: posts } = usePostsList();
+
+  const myPosts = posts?.filter((post) => post.author_id === user?.id) || [];
   const [fullName, setFullName] = useState('Anime Fan');
   const [email, setEmail] = useState('anime.fan@example.com');
   const [bio, setBio] = useState('Anime enthusiast and social network user');
@@ -115,8 +125,13 @@ export default function ProfilePage() {
     alert('Demo: Avatar change is not implemented in this demo');
   };
 
-  const handleLogout = () => {
+  const handleLogout = async () => {
+    try {
+      await logoutUser();
+    } catch {
+    }
     clearToken();
+    queryClient.invalidateQueries({ queryKey: ['currentUser'] });
     router.push('/');
   };
 
@@ -143,36 +158,7 @@ export default function ProfilePage() {
         </div>
       ) : (
         <>
-          {/* Header */}
-          <header className="bg-[#1F2833] border-b border-[#45A29E]">
-            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-              <div className="flex items-center justify-between h-16">
-                {/* Logo */}
-                <div className="flex items-center space-x-3">
-                  <div className="flex items-center justify-center w-10 h-10 rounded-full bg-[#0B0C10]">
-                    <span className="text-xl font-bold text-[#66FCF1]">A</span>
-                  </div>
-                  <span className="text-xl font-bold text-[#C5C6C7]">AnimeSocial</span>
-                </div>
-
-                {/* User Actions */}
-                <div className="flex items-center space-x-4">
-                  <div className="flex items-center space-x-2">
-                    <div className="w-8 h-8 rounded-full bg-[#66FCF1] flex items-center justify-center">
-                      <span className="text-[#0B0C10] font-semibold">{fullName.charAt(0).toUpperCase()}</span>
-                    </div>
-                    <span className="text-[#C5C6C7] hidden sm:block">{fullName}</span>
-                  </div>
-                  <button
-                    onClick={handleLogout}
-                    className="px-4 py-2 rounded-lg border border-[#45A29E] text-[#C5C6C7] hover:border-[#66FCF1] hover:text-[#66FCF1] transition-colors focus:outline-none focus:ring-2 focus:ring-[#66FCF1]"
-                  >
-                    Log out
-                  </button>
-                </div>
-              </div>
-            </div>
-          </header>
+          <Header user={{ id: 0, username: fullName, email, is_admin: false }} />
 
       {/* Main Content */}
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
@@ -195,20 +181,29 @@ export default function ProfilePage() {
                   </a>
                 </li>
                 <li>
+                  <Link href="/anime" className="flex items-center space-x-3 px-4 py-3 rounded-lg text-[#C5C6C7] hover:bg-[#0B0C10] transition-colors">
+                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 4v16M17 4v16M3 8h4m10 0h4M3 12h18M3 16h4m10 0h4M4 20h16a2 2 0 002-2V6a2 2 0 00-2-2H4a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                    </svg>
+                    <span>Anime</span>
+                  </Link>
+                </li>
+                <li>
+                  <Link href="/posts" className="flex items-center space-x-3 px-4 py-3 rounded-lg text-[#C5C6C7] hover:bg-[#0B0C10] transition-colors">
+                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 20H5a2 2 0 01-2-2V6a2 2 0 012-2h10a2 2 0 012 2v12a2 2 0 01-2 2z" />
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-6l-5 5V5a2 2 0 00-2 2z" />
+                    </svg>
+                    <span>Posts</span>
+                  </Link>
+                </li>
+                <li>
                   <a href="#" className="flex items-center space-x-3 px-4 py-3 rounded-lg text-[#C5C6C7] hover:bg-[#0B0C10] transition-colors">
                     <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
                     </svg>
                     <span>Settings</span>
-                  </a>
-                </li>
-                <li>
-                  <a href="#" className="flex items-center space-x-3 px-4 py-3 rounded-lg text-[#C5C6C7] hover:bg-[#0B0C10] transition-colors">
-                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" />
-                    </svg>
-                    <span>Notifications</span>
                   </a>
                 </li>
               </ul>
@@ -460,6 +455,20 @@ export default function ProfilePage() {
               </div>
             </div>
 
+            {/* My Posts */}
+            <div className="bg-[#1F2833] rounded-2xl p-6 shadow-2xl">
+              <h2 className="text-xl font-bold text-[#FFFFFF] mb-6">Мої пости</h2>
+              {myPosts.length === 0 ? (
+                <p className="text-[#C5C6C7]">У вас ще немає постів</p>
+              ) : (
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  {myPosts.map((post) => (
+                    <PostCard key={post.id} post={post} currentUserId={user?.id} />
+                  ))}
+                </div>
+              )}
+            </div>
+
             {/* Action Buttons */}
             <div className="flex flex-col sm:flex-row gap-4">
               <button
@@ -487,16 +496,38 @@ export default function ProfilePage() {
               </button>
             </div>
 
+            {/* My Posts */}
+            <div className="bg-[#1F2833] rounded-2xl p-6 shadow-2xl">
+              <h2 className="text-xl font-bold text-[#FFFFFF] mb-6">Мої пости</h2>
+              {myPosts.length === 0 ? (
+                <p className="text-[#C5C6C7]">У вас ще немає постів</p>
+              ) : (
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  {myPosts.map((post) => (
+                    <PostCard key={post.id} post={post} currentUserId={user?.id} />
+                  ))}
+                </div>
+              )}
+            </div>
+
             {/* Danger Zone */}
             <div className="bg-[#1F2833] rounded-2xl p-6 shadow-2xl border-2 border-red-900">
               <h2 className="text-xl font-bold text-red-400 mb-2">Danger Zone</h2>
               <p className="text-[#C5C6C7] mb-4">Once you delete your account, there is no going back. Please be certain.</p>
-              <button
-                onClick={handleDeleteAccount}
-                className="px-6 py-3 rounded-lg bg-red-900 text-red-400 font-semibold hover:bg-red-800 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 focus:ring-offset-[#1F2833] transition-colors"
-              >
-                Delete Account
-              </button>
+              <div className="flex flex-col sm:flex-row gap-4">
+                <button
+                  onClick={handleLogout}
+                  className="px-6 py-3 rounded-lg border-2 border-[#45A29E] text-[#C5C6C7] font-semibold hover:border-[#66FCF1] hover:text-[#66FCF1] focus:outline-none focus:ring-2 focus:ring-[#66FCF1] transition-colors"
+                >
+                  Вийти
+                </button>
+                <button
+                  onClick={handleDeleteAccount}
+                  className="px-6 py-3 rounded-lg bg-red-900 text-red-400 font-semibold hover:bg-red-800 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 focus:ring-offset-[#1F2833] transition-colors"
+                >
+                  Delete Account
+                </button>
+              </div>
             </div>
           </div>
         </div>
@@ -534,6 +565,24 @@ export default function ProfilePage() {
           Profile updated successfully
         </div>
       )}
+
+      {/* Links to other pages */}
+      <div className="mt-8 px-4 sm:px-6 lg:px-8">
+        <div className="flex flex-wrap gap-4">
+          <Link href="/" className="text-[#66FCF1] hover:text-[#45A29E] transition-colors">
+            → Home
+          </Link>
+          <Link href="/anime" className="text-[#66FCF1] hover:text-[#45A29E] transition-colors">
+            → Anime Catalog
+          </Link>
+          <Link href="/posts" className="text-[#66FCF1] hover:text-[#45A29E] transition-colors">
+            → Posts
+          </Link>
+          <Link href="/posts/new" className="text-[#66FCF1] hover:text-[#45A29E] transition-colors">
+            → Create Post
+          </Link>
+        </div>
+      </div>
         </>
       )}
     </div>

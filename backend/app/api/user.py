@@ -60,6 +60,19 @@ async def login_route(user: OAuth2PasswordRequestForm = Depends(), db: AsyncSess
         raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail="Database error")
 
 
+@router.post("/logout",
+             status_code=status.HTTP_200_OK,
+             responses={
+                 status.HTTP_401_UNAUTHORIZED: {"description": "Token is invalid or required"},
+                 status.HTTP_500_INTERNAL_SERVER_ERROR: {"description": "Database error"}
+             })
+async def logout_route(user: User = Depends(get_current_user)):
+    try:
+        return {"detail": "Successfully logged out"}
+    except Exception as e:
+        raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail="Database error")
+
+
 @router.get("/me",
             response_model=UserRespons,
             status_code=status.HTTP_200_OK,
