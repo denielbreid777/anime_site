@@ -13,7 +13,6 @@ from app.crud.anime import get_anime
 router = APIRouter(prefix="/products", tags=["Products"])
 
 
-# Всі товари (тільки активні) + фільтр по категорії і аніме
 @router.get("",
             response_model=list[ProductResponse],
             status_code=status.HTTP_200_OK)
@@ -41,15 +40,13 @@ async def get_product_route(product_id: int, db: AsyncSession = Depends(get_db))
     return product
 
 
-# Створення - тільки адмін
 @router.post("",
              response_model=ProductResponse,
              status_code=status.HTTP_201_CREATED,
              responses={
                  status.HTTP_401_UNAUTHORIZED: {"description": "Token is required"},
-                 status.HTTP_403_FORBIDDEN: {"description": "Only admin can create products"},
-                 status.HTTP_404_NOT_FOUND: {"description": "Anime not found"},
-                 status.HTTP_422_UNPROCESSABLE_CONTENT: {"description": "Data validation error"}
+                 status.HTTP_403_FORBIDDEN: {"description": "Only admin cancreate products"},
+                 status.HTTP_404_NOT_FOUND: {"description": "Anme not found"},
              })
 async def create_product_route(product: ProductCreate, db: AsyncSession = Depends(get_db),
                                user: User = Depends(get_admin_user)):
@@ -60,7 +57,7 @@ async def create_product_route(product: ProductCreate, db: AsyncSession = Depend
     return res_product
 
 
-# Редагування - тільки адмін
+
 @router.patch("/{product_id}",
               response_model=ProductResponse,
               status_code=status.HTTP_200_OK,
@@ -69,7 +66,7 @@ async def create_product_route(product: ProductCreate, db: AsyncSession = Depend
                   status.HTTP_401_UNAUTHORIZED: {"description": "Token is required"},
                   status.HTTP_403_FORBIDDEN: {"description": "Only admin can update products"},
                   status.HTTP_404_NOT_FOUND: {"description": "Product or anime not found"},
-                  status.HTTP_422_UNPROCESSABLE_CONTENT: {"description": "Data validation error"}
+                  status.HTTP_422_UNPROCESSABLE_CONTENT: {"description": "Data validation eror"}
               })
 async def update_product_route(product_id: int, product: ProductUpdate, db: AsyncSession = Depends(get_db),
                                user: User = Depends(get_admin_user)):

@@ -18,18 +18,17 @@ class Product(Base):
     name: Mapped[str] = mapped_column(String(200), nullable=False, index=True)
     description: Mapped[str] = mapped_column(Text, nullable=False)
 
-    # Ціна в центах (1999 = 19.99) щоб не було помилок з float
     price: Mapped[int] = mapped_column(nullable=False)
-    # Скільки штук є на складі
+    #на складіj:
     stock: Mapped[int] = mapped_column(nullable=False, default=0)
 
     category: Mapped[ProductCategory] = mapped_column(Enum(ProductCategory), nullable=False, index=True)
     image_url: Mapped[str | None] = mapped_column(String(500), nullable=True)
 
-    # Товар може бути по якомусь аніме, а може і ні
+    # Товар може бти по якомусь анімено а може і ні
     anime_id: Mapped[int | None] = mapped_column(ForeignKey("anime.id", ondelete="SET NULL"), nullable=True, index=True)
 
-    # Замість видалення ховаємо товар, щоб старі замовлення не зламались
+    # ховаємо товар якшо немаж в стоцфі
     is_active: Mapped[bool] = mapped_column(nullable=False, default=True)
 
     created_at: Mapped[datetime] = mapped_column(DateTime, server_default=func.now())

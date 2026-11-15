@@ -5,7 +5,7 @@ from app.models.product import Product, ProductCategory
 from app.schemas.product import ProductCreate, ProductUpdate
 
 
-async def get_products(db: AsyncSession, category: ProductCategory | None = None, anime_id: int | None = None):
+async def get_products(db: AsyncSession, category: ProductCategory, anime_id: int):
     query = select(Product).where(Product.is_active == True)
 
     if category is not None:
@@ -66,7 +66,7 @@ async def update_product(product_id: int, product: ProductUpdate, db: AsyncSessi
     return finded_product
 
 
-# Не видаляємо з бази а ховаємо (is_active = False)
+# is_active = False - НЕ ВИДАЛЯЖМЕ, ТІЛЬКИ ХОВАЄмо
 async def del_product_by_id(product_id: int, db: AsyncSession):
     product = (await db.execute(select(Product).where(Product.id == product_id))).scalar_one_or_none()
 
