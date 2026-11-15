@@ -18,6 +18,7 @@ from app.models.user import User
 from app.models.anime import Anime
 from app.models.post import Post
 from app.models.comment import Comment
+from app.models.product import Product
 
 
 load_dotenv(os.path.join(os.path.dirname(__file__), '..', '..', '.env'))
