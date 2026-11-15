@@ -4,6 +4,7 @@ from app.api.user import router as user_router
 from app.api.anime import router as anime_router
 from app.api.post import router as post_router
 from app.api.comments import router as comment_router
+from app.api.products import router as product_router
 
 
 from fastapi.middleware.cors import CORSMiddleware
@@ -43,6 +44,7 @@ app.include_router(user_router)
 app.include_router(anime_router)
 app.include_router(post_router)
 app.include_router(comment_router)
+app.include_router(product_router)
 
 if __name__ == "__main__":
     import uvicorn
