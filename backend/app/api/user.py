@@ -26,14 +26,18 @@ router = APIRouter(prefix="/account", tags=["Account"])
 )
 async def registration_route(user: UserRegistr, db: AsyncSession = Depends(get_db)):
     try:
+        print("start registration")
         token = await registration(user, db)
+        print("token",token)
         if not token:
+            print("token is None")
             raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="User with this username or email already exists")
         return {"access_token": token}
-    except HTTPException:
+    except HTTPException as e:
+        print("HTTPException:", e)
         raise
     except Exception as e:
-        print(e)
+        print("Exception:", e)
         raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail="Database error")
 
 
