@@ -4,10 +4,12 @@ import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { registerUser } from '@/lib/api';
 import { setToken } from '@/lib/auth';
-import { validateEmail, validatePassword } from '@/lib/validation';
+import { validatePassword } from '@/lib/validation';
+import { useQueryClient } from '@tanstack/react-query';
 
 export default function RegisterPage() {
   const router = useRouter();
+  const queryClient = useQueryClient();
   const [fullName, setFullName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -38,15 +40,15 @@ export default function RegisterPage() {
     } = {};
 
     if (!fullName.trim()) {
-      newErrors.fullName = 'Имя не может быть пустым';
+      newErrors.fullName = "Ім'я не може бути порожнім";
     }
 
-    if (!email || !validateEmail(email)) {
-      newErrors.email = 'Введите корректный email-адрес';
+    if (!email.trim()) {
+      newErrors.email = 'Email не може бути порожнім';
     }
 
     if (!password) {
-      newErrors.password = 'Пароль не может быть пустым';
+      newErrors.password = 'Пароль не може бути порожнім';
     } else {
       const passwordValidation = validatePassword(password);
       if (!passwordValidation.valid) {
@@ -61,7 +63,7 @@ export default function RegisterPage() {
     }
 
     if (!agreeToTerms) {
-      newErrors.terms = 'Необходимо согласиться с условиями';
+      newErrors.terms = 'Необхідно погодитися з умовами';
     }
 
     setErrors(newErrors);
@@ -78,6 +80,7 @@ export default function RegisterPage() {
         if (response.ok) {
           const data = await response.json();
           setToken(data.access_token);
+          queryClient.invalidateQueries({ queryKey: ['currentUser'] });
           setShowSuccess(true);
           setTimeout(() => {
             setShowSuccess(false);
@@ -86,11 +89,11 @@ export default function RegisterPage() {
         } else {
           const errorData = await response.json().catch(() => ({}));
           if (response.status === 400) {
-            newErrors.server = errorData.detail || 'Пользователь с таким email уже существует';
+            newErrors.server = errorData.detail || 'Користувач з таким email вже існує';
           } else if (response.status === 422) {
-            newErrors.server = 'Ошибка валидации данных';
+            newErrors.server = 'Помилка валідації даних';
           } else {
-            newErrors.server = 'Произошла ошибка при регистрации';
+            newErrors.server = 'Сталася помилка при реєстрації';
           }
           setErrors(newErrors);
         }

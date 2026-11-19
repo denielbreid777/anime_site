@@ -238,3 +238,71 @@ export async function deleteComment(commentId: number): Promise<Response> {
   });
   return response;
 }
+
+// Products endpoints
+export async function getProducts(category?: string, animeId?: number): Promise<Response> {
+  const params = new URLSearchParams();
+  if (category) params.append('category', category);
+  if (animeId) params.append('anime_id', animeId.toString());
+
+  const response = await fetch(`${API_BASE_URL}/products?${params.toString()}`, {
+    headers: getAuthHeaders(),
+  });
+  return response;
+}
+
+export async function getProduct(id: number): Promise<Response> {
+  const response = await fetch(`${API_BASE_URL}/products/${id}`, {
+    headers: getAuthHeaders(),
+  });
+  return response;
+}
+
+export async function createProduct(data: {
+  name: string;
+  description: string;
+  price: number;
+  stock?: number;
+  category: string;
+  image_url?: string;
+  anime_id?: number;
+}): Promise<Response> {
+  const response = await fetch(`${API_BASE_URL}/products`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      ...getAuthHeaders(),
+    },
+    body: JSON.stringify(data),
+  });
+  return response;
+}
+
+export async function updateProduct(id: number, data: {
+  name?: string;
+  description?: string;
+  price?: number;
+  stock?: number;
+  category?: string;
+  image_url?: string;
+  anime_id?: number;
+  is_active?: boolean;
+}): Promise<Response> {
+  const response = await fetch(`${API_BASE_URL}/products/${id}`, {
+    method: 'PATCH',
+    headers: {
+      'Content-Type': 'application/json',
+      ...getAuthHeaders(),
+    },
+    body: JSON.stringify(data),
+  });
+  return response;
+}
+
+export async function deleteProduct(id: number): Promise<Response> {
+  const response = await fetch(`${API_BASE_URL}/products/${id}`, {
+    method: 'DELETE',
+    headers: getAuthHeaders(),
+  });
+  return response;
+}

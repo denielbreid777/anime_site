@@ -23,7 +23,7 @@ export default function ProfilePage() {
   const { data: user } = useCurrentUser();
   const { data: posts } = usePostsList();
 
-  const myPosts = posts?.filter((post) => post.author_id === user?.id) || [];
+  const myPosts = posts?.filter((post: any) => post.author_id === user?.id) || [];
   const [fullName, setFullName] = useState('Anime Fan');
   const [email, setEmail] = useState('anime.fan@example.com');
   const [bio, setBio] = useState('Anime enthusiast and social network user');
@@ -462,7 +462,7 @@ export default function ProfilePage() {
                 <p className="text-[#C5C6C7]">У вас ще немає постів</p>
               ) : (
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                  {myPosts.map((post) => (
+                  {myPosts.map((post: any) => (
                     <PostCard key={post.id} post={post} currentUserId={user?.id} />
                   ))}
                 </div>
@@ -503,7 +503,7 @@ export default function ProfilePage() {
                 <p className="text-[#C5C6C7]">У вас ще немає постів</p>
               ) : (
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                  {myPosts.map((post) => (
+                  {myPosts.map((post: any) => (
                     <PostCard key={post.id} post={post} currentUserId={user?.id} />
                   ))}
                 </div>
