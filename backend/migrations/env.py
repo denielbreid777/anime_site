@@ -19,7 +19,7 @@ from app.models.anime import Anime
 from app.models.post import Post
 from app.models.comment import Comment
 from app.models.product import Product
-
+from pathlib import Path
 
 load_dotenv(Path(__file__).resolve().parent.parent / ".env")
 
