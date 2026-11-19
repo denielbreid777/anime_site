@@ -21,7 +21,7 @@ from app.models.comment import Comment
 from app.models.product import Product
 
 
-load_dotenv(os.path.join(os.path.dirname(__file__), '..', '..', '.env'))
+load_dotenv(Path(__file__).resolve().parent.parent / ".env")
 
 config = context.config
 

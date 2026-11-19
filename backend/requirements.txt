@@ -9,4 +9,5 @@ python-multipart
 alembic
 python-dotenv
 pydantic-settings
+python-dotenv
 sqlalchemy[asyncio]
