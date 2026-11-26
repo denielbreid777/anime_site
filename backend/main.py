@@ -40,11 +40,11 @@ app.add_middleware(
 )
 
 
-app.include_router(user_router)
-app.include_router(anime_router)
-app.include_router(post_router)
-app.include_router(comment_router)
-app.include_router(product_router)
+app.include_router(user_router, prefix="/api")
+app.include_router(anime_router, prefix="/api")
+app.include_router(post_router, prefix="/api")
+app.include_router(comment_router, prefix="/api")
+app.include_router(product_router, prefix="/api")
 
 if __name__ == "__main__":
     import uvicorn
